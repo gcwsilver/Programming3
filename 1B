@@ -1,0 +1,26 @@
+#include<stdio.h>
+#include <string.h>
+main(int argc,char *argv[ ]){
+int n,i,j,max=0;
+int count[128]={0};
+for(i=0;i<argc;i++){
+j=strlen(argv[i]);
+if(j>max){
+max=j;
+n=i;
+}
+}
+for(i=0;i<max;i++){
+j=argv[n][i];
+count[j]++;
+}
+max=0;
+for(i=0;i<128;i++){
+if(count[i]>max){
+max=count[i];
+n=i;
+}
+}
+printf("\n%c %d",n,max);
+return 0;
+}
