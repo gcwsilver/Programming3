@@ -1,0 +1,100 @@
+#include<stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include<string.h>
+
+int stack[1024];
+int MAXSIZE = 1024;  
+int top = -1;
+int isempty() {
+
+if(top == -1)
+return 1;
+else
+return 0;
+}
+ 
+int isfull() {
+
+if(top == MAXSIZE)
+return 1;
+else
+return 0;
+}
+
+int peek() {
+return stack[top];
+}
+
+int pop() {
+int data;
+if(!isempty()) {
+data = stack[top];
+top = top - 1;  
+return data;
+} else {
+printf("Could not retrieve data, Stack is empty.\n");
+}
+}
+
+int push(int data) {
+
+if(!isfull()) {
+top = top + 1;  
+stack[top] = data;
+} else {
+printf("Could not insert data, Stack is full.\n");
+}
+}
+
+void error(char *f, char *s)
+{
+fprintf(stderr, f, s);
+putc('\n', stderr);
+exit(1);
+}
+
+int read_word(char buf[])
+{
+int ch, k = 0;
+while (isspace(ch = getchar()) && ch != EOF);
+if (ch == EOF) return 0;
+buf[k++] = ch;
+while (!isspace(ch = getchar()))
+buf[k++] = ch;
+buf[k] = '\0';
+return 1;
+}
+int main(int argc, char *argv[])
+{
+int i,a,b;
+char buf[1024];
+
+while (read_word(buf)) {
+if (isdigit(buf[0])) {
+if (push(atoi(buf)) == 0) error("stack full", NULL);
+} else if (buf[0] == 'p') {
+printf("%d\n", peek());
+} else {
+a=pop();
+b=pop();
+switch (buf[0]) {
+case '-':
+if (push(b - a) == 0) error("stack full", NULL);
+break;
+case '+':
+if (push(b + a) == 0) error("stack full", NULL);
+break;
+case '*':
+if (push(b * a) == 0) error("stack full", NULL);
+break;
+case '/':
+if (push(b / a) == 0) error("stack full", NULL);
+break;
+default:
+error("illegal input %s", buf);
+}
+}
+
+}
+}
