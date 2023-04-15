@@ -1,0 +1,89 @@
+#include<stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include<string.h>
+
+struct cell {
+char *word;
+int count;
+struct cell *next;
+} *list = NULL, *p,l,r,node_1,node_2;
+
+int get_word(FILE *fp, char buf[])
+{
+int ch, k = 0;
+while (!isalpha(ch = getc(fp)) && ch != EOF);
+if (ch == EOF) return 0;
+buf[k++] = ch;
+while ((ch = getc(fp)) != EOF && isalpha(ch))
+buf[k++] = ch;
+buf[k] = '\0';
+return 1;
+}
+
+void swap (cell *node_1, cell *node_2)
+{
+char *temp = node_1->word;
+node_1->word = node_2 -> word;
+node_2 -> word = temp;
+}
+
+void bubble_sort(cell *head)
+{
+int swapped;
+
+cell *l;
+cell *r = NULL;
+do
+{
+swapped = 0;
+l = head;
+while(l->next != r)
+{
+if (l->word < l->next->word)
+{
+swap(l, l->next);
+swapped = 1;
+}
+l = l->next;
+}
+r = l;
+}while(swapped);
+}
+
+int main(int argc, char *argv[])
+{
+FILE *fp;//C
+int i;
+char buf[1024];
+
+for (i = 1; i < argc; i++) {//A
+if ((fp = fopen(argv[i], "r")) == NULL) {
+fprintf(stderr, "cannot open %s\n", argv[i]);
+exit(1);
+}
+while (get_word(fp, buf) != 0) {
+for (p = list; p != NULL; p = p->next) {
+if (strcmp(buf, p->word) == 0) {
+p->count++;
+goto next;
+}
+}
+p = (struct cell *)malloc(sizeof(struct cell));
+p->word = (char *)malloc(strlen(buf)+1);
+strcpy(p->word, buf);
+p->count = 1;
+p->next = list;
+list = p;
+next:;
+
+}
+
+fclose(fp);//B
+
+}
+
+bubble_sort(p);
+
+for(p=list;p!=NULL;p =p->next) printf("%s %d\n", p->word, p->count);
+}
